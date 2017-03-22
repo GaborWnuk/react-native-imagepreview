@@ -61,7 +61,7 @@ export default class ImagePreview extends PureComponent {
     if (!this.state.viewRef) {
       Animated.timing(this.state.opacity, {
         toValue: 1.0,
-        duration: 100,
+        duration: 50,
       }).start();
       this.setState({
         viewRef: findNodeHandle(this.refs.backgroundImage),
@@ -92,7 +92,7 @@ export default class ImagePreview extends PureComponent {
         ]}
         source={{ uri: source }}
         ref={'backgroundImage'}
-        onLoad={this.createBlur.bind(this)}
+        onLayout={this.createBlur.bind(this)}
       >
         {!this.state.path &&
           <BlurView
