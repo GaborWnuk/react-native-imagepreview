@@ -1,5 +1,5 @@
 # react-native-imagepreview
-[![Build Status](https://travis-ci.org/GaborWnuk/react-native-imagepreview.svg?branch=master)](https://travis-ci.org/GaborWnuk/react-native-imagepreview)[![View package on npm](https://img.shields.io/npm/v/react-native-imagepreview.svg?maxAge=2592000&style=flat-square)](https://www.npmjs.com/package/react-native-imagepreview) [![npm](https://img.shields.io/npm/dm/react-native-imagepreview.svg?maxAge=2592000&style=flat-square)](https://www.npmjs.com/package/react-native-imagepreview)
+[![Build Status](https://travis-ci.org/GaborWnuk/react-native-imagepreview.svg?branch=master)](https://travis-ci.org/GaborWnuk/react-native-imagepreview) [![View package on npm](https://img.shields.io/npm/v/react-native-imagepreview.svg?maxAge=2592000&style=flat-square)](https://www.npmjs.com/package/react-native-imagepreview) [![npm](https://img.shields.io/npm/dm/react-native-imagepreview.svg?maxAge=2592000&style=flat-square)](https://www.npmjs.com/package/react-native-imagepreview)
 
 Image Preview for React Native
 
