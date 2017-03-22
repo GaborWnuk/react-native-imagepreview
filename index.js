@@ -5,7 +5,7 @@
  */
 
 import React, { PureComponent } from 'react';
-import { Image, Platform, Animated } from 'react-native';
+import { Image, Platform, Animated, findNodeHandle } from 'react-native';
 import { ImageCache } from 'react-native-img-cache';
 import { BlurView } from 'react-native-blur';
 import B64ImagePreview from './b64';
@@ -13,23 +13,17 @@ import B64ImagePreview from './b64';
 export default class ImagePreview extends PureComponent {
   static prefix = Platform.OS === 'ios' ? '' : 'file://';
   state = {
+    viewRef: 0,
     path: undefined,
-    blurRadius: new Animated.Value(10),
+    opacity: new Animated.Value(0),
   };
 
   constructor() {
     super();
     this.handler = path => {
-      setTimeout(
-        () => {
-          this.setState({ path });
-          Animated.timing(this.state.blurRadius, {
-            toValue: 0,
-            duration: 300,
-          }).start();
-        },
-        5000,
-      );
+      this.setState({
+        path: path,
+      });
     };
   }
 
@@ -63,6 +57,18 @@ export default class ImagePreview extends PureComponent {
     this.dispose();
   }
 
+  createBlur() {
+    if (!this.state.viewRef) {
+      Animated.timing(this.state.opacity, {
+        toValue: 1.0,
+        duration: 100,
+      }).start();
+      this.setState({
+        viewRef: findNodeHandle(this.refs.backgroundImage),
+      });
+    }
+  }
+
   render() {
     const { style, b64 } = this.props;
     var source: string = ImagePreview.prefix + this.state.path;
@@ -73,15 +79,31 @@ export default class ImagePreview extends PureComponent {
     }
 
     return (
-      <Image style={style} source={{ uri: source }}>
-        <BlurView
-          blurType="light"
-          blurAmount={this.state.blurRadius}
-          style={{ flex: 1 }}
-        >
-          {this.props.children}
-        </BlurView>
-      </Image>
+      <Animated.Image
+        style={[
+          {
+            flex: 1,
+            justifyContent: 'center',
+            resizeMode: 'cover',
+            opacity: this.state.opacity,
+          },
+          this.state.path ? {} : { backgroundColor: 'transparent' },
+          style,
+        ]}
+        source={{ uri: source }}
+        ref={'backgroundImage'}
+        onLoad={this.createBlur.bind(this)}
+      >
+        {!this.state.path &&
+          <BlurView
+            viewRef={this.state.viewRef}
+            blurType="light"
+            blurAmount={10}
+            style={{
+              flex: 1,
+            }}
+          />}
+      </Animated.Image>
     );
   }
 }
