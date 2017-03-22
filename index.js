@@ -103,6 +103,7 @@ export default class ImagePreview extends PureComponent {
               flex: 1,
             }}
           />}
+        {this.props.children}
       </Animated.Image>
     );
   }
