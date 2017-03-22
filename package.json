@@ -1,6 +1,6 @@
 {
   "name": "react-native-imagepreview",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": [
     "react",
     "image",
@@ -13,7 +13,7 @@
     "type": "git",
     "url": "https://github.com/GaborWnuk/react-native-imagepreview.git"
   },
-  "private": true,
+  "private": false,
   "scripts": {
     "test": "jest --coverage --forceExit",
     "flow": "./node_modules/.bin/flow; test $? -eq 0 -o $? -eq 2"
