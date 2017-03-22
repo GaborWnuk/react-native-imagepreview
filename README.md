@@ -9,10 +9,16 @@ Image Preview for React Native
 
 ## Installation
 
-### react-native-fetch-blob
+### Dependencies
+#### react-native-fetch-blob
 This package has a dependency with [react-native-fetch-blob](https://github.com/wkh237/react-native-fetch-blob).
 If your project doesn't have a dependency with this package already, please refer to [their installation instructions](https://github.com/wkh237/react-native-fetch-blob#user-content-installation).
 
+#### react-native-blur
+This package has a dependency with [react-native-blur](https://github.com/react-native-community/react-native-blur).
+If your project doesn't have a dependency with this package already, please refer to [their installation instructions](https://github.com/react-native-community/react-native-blur#installation).
+
+### Installation
 
 Use your favourite packager:
 
