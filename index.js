@@ -73,10 +73,10 @@ export default class ImagePreview extends PureComponent {
   render() {
     const { style } = this.props;
     var source: string = ImagePreview.prefix + this.state.path;
-    var b64 = this.props.b64;
+    var b64: ?string = null;
 
-    if (!this.state.path && b64) {
-      const imagePreview = new B64ImagePreview(b64);
+    if (!this.state.path && this.props.b64) {
+      const imagePreview = new B64ImagePreview(this.props.b64);
       b64 = 'data:image/jpeg;base64,' + imagePreview.b64String;
     }
 
