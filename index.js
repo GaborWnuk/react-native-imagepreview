@@ -21,7 +21,7 @@ export default class ImagePreview extends PureComponent {
 
   constructor() {
     super();
-    this.handler = path => {
+    this.handler = (path: string) => {
       this.setState({
         path: path,
       });
@@ -39,7 +39,7 @@ export default class ImagePreview extends PureComponent {
     }
   }
 
-  observe(uri, mutable) {
+  observe(uri: string, mutable: boolean) {
     if (uri !== this.uri) {
       this.dispose();
       this.uri = uri;
@@ -53,7 +53,7 @@ export default class ImagePreview extends PureComponent {
     this.observe(source.uri, mutable === true);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: { [id: string]: number }) {
     const { mutable } = nextProps;
     const source = this.props.source;
     this.observe(source.uri, mutable === true);
@@ -70,7 +70,7 @@ export default class ImagePreview extends PureComponent {
     this.dispose();
   }
 
-  render() {
+  render(): JSX.JSXElement {
     const { style } = this.props;
     var source: string = ImagePreview.prefix + this.state.path;
     var b64: ?string = null;
