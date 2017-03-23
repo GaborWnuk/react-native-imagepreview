@@ -15,7 +15,8 @@ export default class ImagePreview extends PureComponent {
   state = {
     viewRef: 0,
     path: undefined,
-    opacity: 0,
+    previewOpacity: 0,
+    opacity: new Animated.Value(0),
   };
 
   constructor() {
@@ -24,6 +25,11 @@ export default class ImagePreview extends PureComponent {
       this.setState({
         path: path,
       });
+
+      Animated.timing(this.state.opacity, {
+        toValue: 1,
+        duration: 300,
+      }).start();
     };
   }
 
@@ -56,7 +62,7 @@ export default class ImagePreview extends PureComponent {
   componentDidMount() {
     this.setState({
       viewRef: findNodeHandle(this.refs.backgroundImage),
-      opacity: 1,
+      previewOpacity: 1,
     });
   }
 
@@ -65,40 +71,51 @@ export default class ImagePreview extends PureComponent {
   }
 
   render() {
-    const { style, b64 } = this.props;
+    const { style } = this.props;
     var source: string = ImagePreview.prefix + this.state.path;
+    var b64 = this.props.b64;
 
     if (!this.state.path && b64) {
       const imagePreview = new B64ImagePreview(b64);
-      source = 'data:image/jpeg;base64,' + imagePreview.b64String;
+      b64 = 'data:image/jpeg;base64,' + imagePreview.b64String;
     }
 
     return (
-      <Animated.Image
+      <Image
         style={[
           {
             flex: 1,
             justifyContent: 'center',
             resizeMode: 'cover',
-            opacity: this.state.opacity,
+            opacity: this.state.previewOpacity,
           },
           this.state.path ? {} : { backgroundColor: 'transparent' },
           style,
         ]}
-        source={{ uri: source }}
+        source={{ uri: b64 }}
         ref={'backgroundImage'}
       >
-        {!this.state.path &&
-          <BlurView
-            viewRef={this.state.viewRef}
-            blurType="light"
-            blurAmount={10}
-            style={{
-              flex: 1,
-            }}
-          />}
+        <BlurView
+          viewRef={this.state.viewRef}
+          blurType="light"
+          blurAmount={10}
+          style={{
+            flex: 1,
+          }}
+        />
+        <Animated.Image
+          source={{ uri: source }}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            opacity: this.state.opacity,
+          }}
+        />
         {this.props.children}
-      </Animated.Image>
+      </Image>
     );
   }
 }
