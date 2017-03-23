@@ -15,7 +15,7 @@ export default class ImagePreview extends PureComponent {
   state = {
     viewRef: 0,
     path: undefined,
-    opacity: new Animated.Value(0),
+    opacity: 0,
   };
 
   constructor() {
@@ -53,20 +53,15 @@ export default class ImagePreview extends PureComponent {
     this.observe(source.uri, mutable === true);
   }
 
-  componentWillUnmount() {
-    this.dispose();
+  componentDidMount() {
+    this.setState({
+      viewRef: findNodeHandle(this.refs.backgroundImage),
+      opacity: 1,
+    });
   }
 
-  createBlur() {
-    if (!this.state.viewRef) {
-      Animated.timing(this.state.opacity, {
-        toValue: 1.0,
-        duration: 50,
-      }).start();
-      this.setState({
-        viewRef: findNodeHandle(this.refs.backgroundImage),
-      });
-    }
+  componentWillUnmount() {
+    this.dispose();
   }
 
   render() {
@@ -92,7 +87,6 @@ export default class ImagePreview extends PureComponent {
         ]}
         source={{ uri: source }}
         ref={'backgroundImage'}
-        onLayout={this.createBlur.bind(this)}
       >
         {!this.state.path &&
           <BlurView
