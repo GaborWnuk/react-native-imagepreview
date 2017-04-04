@@ -1,6 +1,6 @@
 {
   "name": "react-native-imagepreview",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "keywords": [
     "react",
     "image",
@@ -23,7 +23,7 @@
     "react": "^15.4.2",
     "react-native": "^0.42.0",
     "react-native-blur": "^2.0.0",
-    "react-native-img-cache": "^1.1.7"
+    "react-native-img-cache": "1.1.7"
   },
   "devDependencies": {
     "babel-jest": "^19.0.0",
