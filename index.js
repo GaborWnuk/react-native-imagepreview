@@ -94,7 +94,7 @@ export default class ImagePreview extends PureComponent {
         <BlurView
           viewRef={this.state.viewRef}
           blurType="light"
-          blurAmount={10}
+          blurAmount={5}
           overlayColor={'rgba(0, 0, 0, 0.1)'}
           style={{
             flex: 1,
