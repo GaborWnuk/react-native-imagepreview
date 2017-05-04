@@ -1,5 +1,3 @@
-import React, { Image } from 'react';
-
 import { expect } from 'chai';
 
 var im = require('imagemagick');
