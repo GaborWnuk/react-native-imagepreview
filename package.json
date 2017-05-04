@@ -1,6 +1,6 @@
 {
   "name": "react-native-imagepreview",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "keywords": [
     "react",
     "image",
@@ -19,9 +19,7 @@
     "flow": "./node_modules/.bin/flow; test $? -eq 0 -o $? -eq 2"
   },
   "dependencies": {
-    "base-64": "^0.1.0",
-    "react-native-blur": "^2.0.0",
-    "react-native-img-cache": "1.1.12"
+    "base-64": "^0.1.0"
   },
   "devDependencies": {
     "babel-jest": "^19.0.0",
