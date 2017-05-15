@@ -4,14 +4,14 @@
  * @flow
  */
 
-import React, { PureComponent } from 'react';
-import { Image, Platform, Animated, findNodeHandle } from 'react-native';
-import { ImageCache } from 'react-native-img-cache';
-import { BlurView } from 'react-native-blur';
-import B64ImagePreview from './b64';
+import React, { PureComponent } from "react";
+import { Image, Platform, Animated, findNodeHandle } from "react-native";
+import { ImageCache } from "react-native-img-cache";
+import { BlurView } from "react-native-blur";
+import B64ImagePreview from "./b64";
 
 export default class ImagePreview extends PureComponent {
-  static prefix = Platform.OS === 'ios' ? '' : 'file://';
+  static prefix = Platform.OS === "ios" ? "" : "file://";
   state = {
     viewRef: 0,
     path: undefined,
@@ -21,7 +21,7 @@ export default class ImagePreview extends PureComponent {
 
   constructor() {
     super();
-    this.handler = (path: string) => {
+    this.handler = path => {
       this.setState({
         path: path,
       });
@@ -35,28 +35,56 @@ export default class ImagePreview extends PureComponent {
 
   dispose() {
     if (this.uri) {
-      ImageCache.getCache().dispose(this.uri, this.handler);
+      ImageCache.get().dispose(this.uri, this.handler);
     }
   }
 
-  observe(uri: string, mutable: boolean) {
-    if (uri !== this.uri) {
+  observe(source, mutable) {
+    if (source.uri !== this.uri) {
       this.dispose();
-      this.uri = uri;
-      ImageCache.getCache().on(uri, this.handler, !mutable);
+      this.uri = source.uri;
+      ImageCache.get().on(source, this.handler, !mutable);
     }
   }
 
+  getProps() {
+    const props = {};
+
+    Object.keys(this.props).forEach(prop => {
+      if (prop === "source" && this.props.source.uri) {
+        props["source"] = this.state.path ? { uri: FILE_PREFIX + this.state.path } : {};
+      } else if (["mutable", "component"].indexOf(prop) === -1) {
+        props[prop] = this.props[prop];
+      }
+    });
+
+    return props;
+  }
+
+  checkSource(source) {
+    if (Array.isArray(source)) {
+      throw new Error(
+        `Giving multiple URIs to CachedImage is not yet supported.
+            If you want to see this feature supported, please file and issue at
+             https://github.com/wcandillon/react-native-img-cache`,
+      );
+    }
+    return source;
+  }
   componentWillMount() {
     const { mutable } = this.props;
-    const source = this.props.source;
-    this.observe(source.uri, mutable === true);
+    const source = this.checkSource(this.props.source);
+    if (source.uri) {
+      this.observe(source, mutable === true);
+    }
   }
 
-  componentWillReceiveProps(nextProps: { [id: string]: number }) {
+  componentWillReceiveProps(nextProps) {
     const { mutable } = nextProps;
-    const source = this.props.source;
-    this.observe(source.uri, mutable === true);
+    const source = this.checkSource(nextProps.source);
+    if (source.uri) {
+      this.observe(source, mutable === true);
+    }
   }
 
   componentDidMount() {
@@ -73,29 +101,29 @@ export default class ImagePreview extends PureComponent {
   render(): JSX.JSXElement {
     const { style } = this.props;
     var source: string = ImagePreview.prefix + this.state.path;
-    var b64: string = 'data:image/jpeg;base64,' +
-      new B64ImagePreview(this.props.b64).b64String;
+    var b64: string = "data:image/jpeg;base64," + new B64ImagePreview(this.props.b64).b64String;
 
+    console.log(this.state.path);
     return (
       <Image
         style={[
           {
             flex: 1,
-            justifyContent: 'center',
-            resizeMode: 'cover',
+            justifyContent: "center",
+            resizeMode: "cover",
             opacity: this.state.previewOpacity,
           },
-          this.state.path ? {} : { backgroundColor: 'transparent' },
+          this.state.path ? {} : { backgroundColor: "transparent" },
           style,
         ]}
         source={{ uri: b64 }}
-        ref={'backgroundImage'}
+        ref={"backgroundImage"}
       >
         <BlurView
           viewRef={this.state.viewRef}
           blurType="light"
           blurAmount={7}
-          overlayColor={'rgba(0, 0, 0, 0.1)'}
+          overlayColor={"rgba(0, 0, 0, 0.1)"}
           style={{
             flex: 1,
           }}
@@ -103,7 +131,7 @@ export default class ImagePreview extends PureComponent {
         <Animated.Image
           source={{ uri: source }}
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             bottom: 0,
