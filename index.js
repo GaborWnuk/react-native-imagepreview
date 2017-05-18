@@ -5,15 +5,17 @@
  */
 
 import React, { PureComponent } from 'react';
-import { Image, Platform, Animated, findNodeHandle } from 'react-native';
+import { Image, Platform, Animated, findNodeHandle, Text } from 'react-native';
 import { ImageCache } from 'react-native-img-cache';
 import { BlurView } from 'react-native-blur';
+import * as Progress from 'react-native-progress';
 import B64ImagePreview from './b64';
 
 export default class ImagePreview extends PureComponent {
   static prefix = Platform.OS === 'ios' ? '' : 'file://';
   state = {
-    viewRef: 0,
+    blurViewRef: 0,
+    backgroundImageViewRef: 0,
     path: undefined,
     previewOpacity: 0,
     opacity: new Animated.Value(0),
@@ -23,7 +25,7 @@ export default class ImagePreview extends PureComponent {
     super();
     this.handler = path => {
       this.setState({
-        path: path,
+        path: ImagePreview.prefix + path,
       });
 
       Animated.timing(this.state.opacity, {
@@ -91,7 +93,7 @@ export default class ImagePreview extends PureComponent {
 
   componentDidMount() {
     this.setState({
-      viewRef: findNodeHandle(this.refs.backgroundImage),
+      backgroundImageViewRef: this.state.backgroundImageViewRef,
       previewOpacity: 1,
     });
   }
@@ -102,11 +104,9 @@ export default class ImagePreview extends PureComponent {
 
   render(): JSX.JSXElement {
     const { style } = this.props;
-    var source: string = ImagePreview.prefix + this.state.path;
     var b64: string =
       'data:image/jpeg;base64,' + new B64ImagePreview(this.props.b64).b64String;
 
-    console.log(this.state.path);
     return (
       <Image
         style={[
@@ -120,12 +120,12 @@ export default class ImagePreview extends PureComponent {
           style,
         ]}
         source={{ uri: b64 }}
-        ref={'backgroundImage'}
+        ref={this.state.backgroundImageViewRef}
       >
-
         {this.props.blur &&
+          !this.state.path &&
           <BlurView
-            viewRef={this.state.viewRef}
+            viewRef={this.state.blurViewRef}
             blurType="light"
             blurAmount={7}
             overlayColor={'rgba(0, 0, 0, 0.1)'}
@@ -133,8 +133,20 @@ export default class ImagePreview extends PureComponent {
               flex: 1,
             }}
           />}
+        {!this.state.path &&
+          <Progress.Circle
+            size={22}
+            indeterminate={true}
+            color="white"
+            borderWidth={3}
+            style={{
+              position: 'absolute',
+              bottom: 3,
+              right: 3,
+            }}
+          />}
         <Animated.Image
-          source={{ uri: source }}
+          source={{ uri: this.state.path }}
           style={{
             position: 'absolute',
             top: 0,
