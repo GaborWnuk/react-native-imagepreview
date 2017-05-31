@@ -24,15 +24,32 @@ export default class ImagePreview extends PureComponent {
   constructor() {
     super();
     this.handler = path => {
-      this.setState({
-        path: ImagePreview.prefix + path,
-      });
+      if (this.props.autoHeight) {
+        Image.getSize(
+          path,
+          (width, height) => {
+            this.setState({
+              autoHeight: this.state.layout.width * height / width,
+              path: ImagePreview.prefix + path,
+            });
+          },
+          error => {
+            console.warn(`Couldn't get the image size: ${error.message}`);
+          },
+        );
+      } else {
+        this.setState({
+          path: ImagePreview.prefix + path,
+        });
+      }
 
       Animated.timing(this.state.opacity, {
         toValue: 1,
         duration: 300,
       }).start();
     };
+
+    this._onLayout = this._onLayout.bind(this);
   }
 
   dispose() {
@@ -47,6 +64,14 @@ export default class ImagePreview extends PureComponent {
       this.uri = source.uri;
       ImageCache.get().on(source, this.handler, !mutable);
     }
+  }
+
+  _onLayout(event) {
+    if (!this.props.autoHeight) {
+      return;
+    }
+
+    this.setState({ layout: event.nativeEvent.layout });
   }
 
   getProps() {
@@ -118,7 +143,9 @@ export default class ImagePreview extends PureComponent {
           },
           this.state.path ? {} : { backgroundColor: 'transparent' },
           style,
+          !this.props.autoHeight ? {} : { height: this.state.autoHeight },
         ]}
+        onLayout={this._onLayout}
         source={{ uri: b64 }}
         ref={this.state.backgroundImageViewRef}
       >
