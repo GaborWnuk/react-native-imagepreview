@@ -143,7 +143,9 @@ export default class ImagePreview extends PureComponent {
           },
           this.state.path ? {} : { backgroundColor: 'transparent' },
           style,
-          !this.props.autoHeight ? {} : { height: this.state.autoHeight },
+          !this.props.autoHeight || this.state.autoHeight <= 0
+            ? {}
+            : { height: this.state.autoHeight },
         ]}
         onLayout={this._onLayout}
         source={{ uri: b64 }}
