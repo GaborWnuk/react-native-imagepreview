@@ -163,6 +163,7 @@ export default class ImagePreview extends PureComponent {
             }}
           />}
         {!this.state.path &&
+          this.props.progress &&
           <Progress.Circle
             size={22}
             indeterminate={true}
