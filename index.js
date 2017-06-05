@@ -5,7 +5,13 @@
  */
 
 import React, { PureComponent } from 'react';
-import { Image, Platform, Animated, findNodeHandle, Text } from 'react-native';
+import {
+  Image,
+  Platform,
+  Animated,
+  TouchableHighlight,
+  Text,
+} from 'react-native';
 import { ImageCache } from 'react-native-img-cache';
 import { BlurView } from 'react-native-blur';
 import * as Progress from 'react-native-progress';
@@ -133,61 +139,62 @@ export default class ImagePreview extends PureComponent {
       'data:image/jpeg;base64,' + new B64ImagePreview(this.props.b64).b64String;
 
     return (
-      <Image
-        style={[
-          {
-            flex: 1,
-            justifyContent: 'center',
-            resizeMode: 'cover',
-            opacity: this.state.previewOpacity,
-          },
-          this.state.path ? {} : { backgroundColor: 'transparent' },
-          style,
-          !this.props.autoHeight || !this.state.autoHeight
-            ? {}
-            : { height: this.state.autoHeight },
-        ]}
-        onLayout={this._onLayout}
-        source={{ uri: b64 }}
-        ref={this.state.backgroundImageViewRef}
-      >
-        {this.props.blur &&
-          !this.state.path &&
-          <BlurView
-            viewRef={this.state.blurViewRef}
-            blurType="light"
-            blurAmount={7}
-            overlayColor={'rgba(0, 0, 0, 0.1)'}
-            style={{
+      <TouchableHighlight onPress={this.props.onPress} style={style}>
+        <Image
+          style={[
+            {
               flex: 1,
-            }}
-          />}
-        {!this.state.path &&
-          this.props.progress &&
-          <Progress.Circle
-            size={22}
-            indeterminate={true}
-            color="white"
-            borderWidth={3}
+              justifyContent: 'center',
+              resizeMode: 'cover',
+              opacity: this.state.previewOpacity,
+            },
+            this.state.path ? {} : { backgroundColor: 'transparent' },
+            !this.props.autoHeight || !this.state.autoHeight
+              ? {}
+              : { height: this.state.autoHeight },
+          ]}
+          onLayout={this._onLayout}
+          source={{ uri: b64 }}
+          ref={this.state.backgroundImageViewRef}
+        >
+          {this.props.blur &&
+            !this.state.path &&
+            <BlurView
+              viewRef={this.state.blurViewRef}
+              blurType="light"
+              blurAmount={7}
+              overlayColor={'rgba(0, 0, 0, 0.1)'}
+              style={{
+                flex: 1,
+              }}
+            />}
+          {!this.state.path &&
+            this.props.progress &&
+            <Progress.Circle
+              size={22}
+              indeterminate={true}
+              color="white"
+              borderWidth={3}
+              style={{
+                position: 'absolute',
+                bottom: 3,
+                right: 3,
+              }}
+            />}
+          <Animated.Image
+            source={{ uri: this.state.path }}
             style={{
               position: 'absolute',
-              bottom: 3,
-              right: 3,
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+              opacity: this.state.opacity,
             }}
-          />}
-        <Animated.Image
-          source={{ uri: this.state.path }}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
-            opacity: this.state.opacity,
-          }}
-        />
-        {this.props.children}
-      </Image>
+          />
+          {this.props.children}
+        </Image>
+      </TouchableHighlight>
     );
   }
 }
