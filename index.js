@@ -11,6 +11,7 @@ import {
   Animated,
   TouchableHighlight,
   Text,
+  Dimensions,
 } from 'react-native';
 import { ImageCache } from 'react-native-img-cache';
 import { BlurView } from 'react-native-blur';
@@ -32,10 +33,12 @@ export default class ImagePreview extends PureComponent {
     this.handler = path => {
       if (this.props.autoHeight) {
         Image.getSize(
-          path,
+          (Platform.OS === 'android' ? 'file://' : '') + path,
           (width, height) => {
             this.setState({
-              autoHeight: this.state.layout.width * height / width,
+              autoHeight: !this.state.layout
+                ? Dimensions.get('window').width
+                : this.state.layout.width * height / width,
               path: ImagePreview.prefix + path,
             });
           },
