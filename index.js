@@ -32,14 +32,15 @@ export default class ImagePreview extends PureComponent {
     super();
     this.handler = path => {
       if (this.props.autoHeight) {
+        let filePath = ImagePreview.prefix + path;
         Image.getSize(
-          (Platform.OS === 'android' ? 'file://' : '') + path,
+          filePath,
           (width, height) => {
             this.setState({
               autoHeight: !this.state.layout
                 ? Dimensions.get('window').width
                 : this.state.layout.width * height / width,
-              path: ImagePreview.prefix + path,
+              path: filePath,
             });
           },
           error => {
