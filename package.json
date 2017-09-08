@@ -1,13 +1,7 @@
 {
   "name": "react-native-imagepreview",
-  "version": "0.3.7",
-  "keywords": [
-    "react",
-    "image",
-    "preview",
-    "native",
-    "placeholder"
-  ],
+  "version": "0.3.8",
+  "keywords": ["react", "image", "preview", "native", "placeholder"],
   "homepage": "https://github.com/GaborWnuk/react-native-imagepreview",
   "repository": {
     "type": "git",

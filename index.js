@@ -162,18 +162,21 @@ export default class ImagePreview extends PureComponent {
           ref={this.state.backgroundImageViewRef}
         >
           {this.props.blur &&
-            !this.state.path &&
+          !this.state.path && (
             <BlurView
               viewRef={this.state.blurViewRef}
               blurType="light"
               blurAmount={7}
               overlayColor={'rgba(0, 0, 0, 0.1)'}
               style={{
-                flex: 1,
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
               }}
-            />}
+            />
+          )}
           {!this.state.path &&
-            this.props.progress &&
+          this.props.progress && (
             <Progress.Circle
               size={22}
               indeterminate={true}
@@ -184,7 +187,8 @@ export default class ImagePreview extends PureComponent {
                 bottom: 3,
                 right: 3,
               }}
-            />}
+            />
+          )}
           <Animated.Image
             source={{ uri: this.state.path }}
             style={{
