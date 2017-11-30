@@ -7,6 +7,7 @@
 import React, { PureComponent } from 'react';
 import {
   Image,
+  View,
   Platform,
   Animated,
   TouchableHighlight,
@@ -72,6 +73,7 @@ export default class ImagePreview extends PureComponent {
     if (source.uri !== this.uri) {
       this.dispose();
       this.uri = source.uri;
+
       ImageCache.get().on(source, this.handler, !mutable);
     }
   }
@@ -144,51 +146,53 @@ export default class ImagePreview extends PureComponent {
 
     return (
       <TouchableHighlight onPress={this.props.onPress} style={style}>
-        <Image
-          style={[
-            {
-              flex: 1,
-              justifyContent: 'center',
-              resizeMode: 'cover',
-              opacity: this.state.previewOpacity,
-            },
-            this.state.path ? {} : { backgroundColor: 'transparent' },
-            !this.props.autoHeight || !this.state.autoHeight
-              ? {}
-              : { height: this.state.autoHeight },
-          ]}
-          onLayout={this._onLayout}
-          source={{ uri: b64 }}
-          ref={this.state.backgroundImageViewRef}
-        >
+        <View style={{ flex: 1 }}>
+          <Image
+            style={[
+              {
+                flex: 1,
+                justifyContent: 'center',
+                resizeMode: 'cover',
+                opacity: this.state.previewOpacity,
+              },
+              this.state.path ? {} : { backgroundColor: 'transparent' },
+              !this.props.autoHeight || !this.state.autoHeight
+                ? {}
+                : { height: this.state.autoHeight },
+            ]}
+            onLayout={this._onLayout}
+            source={{ uri: b64 }}
+            ref={this.state.backgroundImageViewRef}
+          />
+
           {this.props.blur &&
-          !this.state.path && (
-            <BlurView
-              viewRef={this.state.blurViewRef}
-              blurType="light"
-              blurAmount={7}
-              overlayColor={'rgba(0, 0, 0, 0.1)'}
-              style={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-              }}
-            />
-          )}
+            !this.state.path && (
+              <BlurView
+                viewRef={this.state.blurViewRef}
+                blurType="light"
+                blurAmount={7}
+                overlayColor={'rgba(0, 0, 0, 0.1)'}
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                }}
+              />
+            )}
           {!this.state.path &&
-          this.props.progress && (
-            <Progress.Circle
-              size={22}
-              indeterminate={true}
-              color="white"
-              borderWidth={3}
-              style={{
-                position: 'absolute',
-                bottom: 3,
-                right: 3,
-              }}
-            />
-          )}
+            this.props.progress && (
+              <Progress.Circle
+                size={22}
+                indeterminate={true}
+                color="white"
+                borderWidth={3}
+                style={{
+                  position: 'absolute',
+                  bottom: 3,
+                  right: 3,
+                }}
+              />
+            )}
           <Animated.Image
             source={{ uri: this.state.path }}
             style={{
@@ -201,7 +205,7 @@ export default class ImagePreview extends PureComponent {
             }}
           />
           {this.props.children}
-        </Image>
+        </View>
       </TouchableHighlight>
     );
   }
